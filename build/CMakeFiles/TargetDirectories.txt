@@ -1,3 +1,0 @@
-/home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build/CMakeFiles/game_server.dir
-/home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build/CMakeFiles/edit_cache.dir
-/home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build/CMakeFiles/rebuild_cache.dir
