@@ -1,2 +1,0 @@
-/usr/bin/ar qc lib/libGameLib.a CMakeFiles/GameLib.dir/src/model.cpp.o CMakeFiles/GameLib.dir/src/boost_json.cpp.o CMakeFiles/GameLib.dir/src/json_loader.cpp.o CMakeFiles/GameLib.dir/src/json_serializer.cpp.o CMakeFiles/GameLib.dir/src/dog.cpp.o CMakeFiles/GameLib.dir/src/game_session.cpp.o CMakeFiles/GameLib.dir/src/event_logger.cpp.o CMakeFiles/GameLib.dir/src/player_tokens.cpp.o CMakeFiles/GameLib.dir/src/loot_generator.cpp.o CMakeFiles/GameLib.dir/src/collision_detector.cpp.o
-/usr/bin/ranlib lib/libGameLib.a

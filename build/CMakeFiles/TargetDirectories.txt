@@ -1,5 +1,0 @@
-/home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles/GameLib.dir
-/home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles/game_server.dir
-/home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles/collision_tests.dir
-/home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles/edit_cache.dir
-/home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles/rebuild_cache.dir
