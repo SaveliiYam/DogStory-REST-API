@@ -49,5 +49,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/GameLib.dir/DependInfo.cmake"
   "CMakeFiles/game_server.dir/DependInfo.cmake"
+  "CMakeFiles/collision_tests.dir/DependInfo.cmake"
   )

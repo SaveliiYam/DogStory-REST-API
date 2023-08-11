@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution
+CMAKE_SOURCE_DIR = /home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build
+CMAKE_BINARY_DIR = /home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build/CMakeFiles /home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles /home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/savelii/backend/MyBackengC-/sprint2/problems/command_line/solution/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/savelii/backend/MyBackengC-/sprint4/problems/leave_game/solution/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,6 +117,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named GameLib
+
+# Build rule for target.
+GameLib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GameLib
+.PHONY : GameLib
+
+# fast build rule for target.
+GameLib/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/build
+.PHONY : GameLib/fast
+
+#=============================================================================
 # Target rules for targets named game_server
 
 # Build rule for target.
@@ -128,6 +141,19 @@ game_server: cmake_check_build_system
 game_server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/build
 .PHONY : game_server/fast
+
+#=============================================================================
+# Target rules for targets named collision_tests
+
+# Build rule for target.
+collision_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 collision_tests
+.PHONY : collision_tests
+
+# fast build rule for target.
+collision_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/collision_tests.dir/build.make CMakeFiles/collision_tests.dir/build
+.PHONY : collision_tests/fast
 
 src/api_handler.o: src/api_handler.cpp.o
 .PHONY : src/api_handler.o
@@ -158,7 +184,7 @@ src/boost_json.o: src/boost_json.cpp.o
 
 # target to build an object file
 src/boost_json.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/boost_json.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/boost_json.cpp.o
 .PHONY : src/boost_json.cpp.o
 
 src/boost_json.i: src/boost_json.cpp.i
@@ -166,7 +192,7 @@ src/boost_json.i: src/boost_json.cpp.i
 
 # target to preprocess a source file
 src/boost_json.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/boost_json.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/boost_json.cpp.i
 .PHONY : src/boost_json.cpp.i
 
 src/boost_json.s: src/boost_json.cpp.s
@@ -174,15 +200,39 @@ src/boost_json.s: src/boost_json.cpp.s
 
 # target to generate assembly for a file
 src/boost_json.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/boost_json.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/boost_json.cpp.s
 .PHONY : src/boost_json.cpp.s
+
+src/collision_detector.o: src/collision_detector.cpp.o
+.PHONY : src/collision_detector.o
+
+# target to build an object file
+src/collision_detector.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/collision_detector.cpp.o
+.PHONY : src/collision_detector.cpp.o
+
+src/collision_detector.i: src/collision_detector.cpp.i
+.PHONY : src/collision_detector.i
+
+# target to preprocess a source file
+src/collision_detector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/collision_detector.cpp.i
+.PHONY : src/collision_detector.cpp.i
+
+src/collision_detector.s: src/collision_detector.cpp.s
+.PHONY : src/collision_detector.s
+
+# target to generate assembly for a file
+src/collision_detector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/collision_detector.cpp.s
+.PHONY : src/collision_detector.cpp.s
 
 src/dog.o: src/dog.cpp.o
 .PHONY : src/dog.o
 
 # target to build an object file
 src/dog.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/dog.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/dog.cpp.o
 .PHONY : src/dog.cpp.o
 
 src/dog.i: src/dog.cpp.i
@@ -190,7 +240,7 @@ src/dog.i: src/dog.cpp.i
 
 # target to preprocess a source file
 src/dog.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/dog.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/dog.cpp.i
 .PHONY : src/dog.cpp.i
 
 src/dog.s: src/dog.cpp.s
@@ -198,7 +248,7 @@ src/dog.s: src/dog.cpp.s
 
 # target to generate assembly for a file
 src/dog.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/dog.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/dog.cpp.s
 .PHONY : src/dog.cpp.s
 
 src/event_logger.o: src/event_logger.cpp.o
@@ -206,7 +256,7 @@ src/event_logger.o: src/event_logger.cpp.o
 
 # target to build an object file
 src/event_logger.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/event_logger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/event_logger.cpp.o
 .PHONY : src/event_logger.cpp.o
 
 src/event_logger.i: src/event_logger.cpp.i
@@ -214,7 +264,7 @@ src/event_logger.i: src/event_logger.cpp.i
 
 # target to preprocess a source file
 src/event_logger.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/event_logger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/event_logger.cpp.i
 .PHONY : src/event_logger.cpp.i
 
 src/event_logger.s: src/event_logger.cpp.s
@@ -222,7 +272,7 @@ src/event_logger.s: src/event_logger.cpp.s
 
 # target to generate assembly for a file
 src/event_logger.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/event_logger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/event_logger.cpp.s
 .PHONY : src/event_logger.cpp.s
 
 src/game_session.o: src/game_session.cpp.o
@@ -230,7 +280,7 @@ src/game_session.o: src/game_session.cpp.o
 
 # target to build an object file
 src/game_session.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/game_session.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/game_session.cpp.o
 .PHONY : src/game_session.cpp.o
 
 src/game_session.i: src/game_session.cpp.i
@@ -238,7 +288,7 @@ src/game_session.i: src/game_session.cpp.i
 
 # target to preprocess a source file
 src/game_session.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/game_session.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/game_session.cpp.i
 .PHONY : src/game_session.cpp.i
 
 src/game_session.s: src/game_session.cpp.s
@@ -246,7 +296,7 @@ src/game_session.s: src/game_session.cpp.s
 
 # target to generate assembly for a file
 src/game_session.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/game_session.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/game_session.cpp.s
 .PHONY : src/game_session.cpp.s
 
 src/http_server.o: src/http_server.cpp.o
@@ -278,7 +328,7 @@ src/json_loader.o: src/json_loader.cpp.o
 
 # target to build an object file
 src/json_loader.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_loader.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_loader.cpp.o
 .PHONY : src/json_loader.cpp.o
 
 src/json_loader.i: src/json_loader.cpp.i
@@ -286,7 +336,7 @@ src/json_loader.i: src/json_loader.cpp.i
 
 # target to preprocess a source file
 src/json_loader.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_loader.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_loader.cpp.i
 .PHONY : src/json_loader.cpp.i
 
 src/json_loader.s: src/json_loader.cpp.s
@@ -294,7 +344,7 @@ src/json_loader.s: src/json_loader.cpp.s
 
 # target to generate assembly for a file
 src/json_loader.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_loader.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_loader.cpp.s
 .PHONY : src/json_loader.cpp.s
 
 src/json_serializer.o: src/json_serializer.cpp.o
@@ -302,7 +352,7 @@ src/json_serializer.o: src/json_serializer.cpp.o
 
 # target to build an object file
 src/json_serializer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_serializer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_serializer.cpp.o
 .PHONY : src/json_serializer.cpp.o
 
 src/json_serializer.i: src/json_serializer.cpp.i
@@ -310,7 +360,7 @@ src/json_serializer.i: src/json_serializer.cpp.i
 
 # target to preprocess a source file
 src/json_serializer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_serializer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_serializer.cpp.i
 .PHONY : src/json_serializer.cpp.i
 
 src/json_serializer.s: src/json_serializer.cpp.s
@@ -318,8 +368,32 @@ src/json_serializer.s: src/json_serializer.cpp.s
 
 # target to generate assembly for a file
 src/json_serializer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/json_serializer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/json_serializer.cpp.s
 .PHONY : src/json_serializer.cpp.s
+
+src/loot_generator.o: src/loot_generator.cpp.o
+.PHONY : src/loot_generator.o
+
+# target to build an object file
+src/loot_generator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/loot_generator.cpp.o
+.PHONY : src/loot_generator.cpp.o
+
+src/loot_generator.i: src/loot_generator.cpp.i
+.PHONY : src/loot_generator.i
+
+# target to preprocess a source file
+src/loot_generator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/loot_generator.cpp.i
+.PHONY : src/loot_generator.cpp.i
+
+src/loot_generator.s: src/loot_generator.cpp.s
+.PHONY : src/loot_generator.s
+
+# target to generate assembly for a file
+src/loot_generator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/loot_generator.cpp.s
+.PHONY : src/loot_generator.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -350,7 +424,7 @@ src/model.o: src/model.cpp.o
 
 # target to build an object file
 src/model.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/model.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/model.cpp.o
 .PHONY : src/model.cpp.o
 
 src/model.i: src/model.cpp.i
@@ -358,7 +432,7 @@ src/model.i: src/model.cpp.i
 
 # target to preprocess a source file
 src/model.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/model.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/model.cpp.i
 .PHONY : src/model.cpp.i
 
 src/model.s: src/model.cpp.s
@@ -366,7 +440,7 @@ src/model.s: src/model.cpp.s
 
 # target to generate assembly for a file
 src/model.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/model.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/model.cpp.s
 .PHONY : src/model.cpp.s
 
 src/player_tokens.o: src/player_tokens.cpp.o
@@ -374,7 +448,7 @@ src/player_tokens.o: src/player_tokens.cpp.o
 
 # target to build an object file
 src/player_tokens.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/player_tokens.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/player_tokens.cpp.o
 .PHONY : src/player_tokens.cpp.o
 
 src/player_tokens.i: src/player_tokens.cpp.i
@@ -382,7 +456,7 @@ src/player_tokens.i: src/player_tokens.cpp.i
 
 # target to preprocess a source file
 src/player_tokens.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/player_tokens.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/player_tokens.cpp.i
 .PHONY : src/player_tokens.cpp.i
 
 src/player_tokens.s: src/player_tokens.cpp.s
@@ -390,7 +464,7 @@ src/player_tokens.s: src/player_tokens.cpp.s
 
 # target to generate assembly for a file
 src/player_tokens.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/player_tokens.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GameLib.dir/build.make CMakeFiles/GameLib.dir/src/player_tokens.cpp.s
 .PHONY : src/player_tokens.cpp.s
 
 src/request_handler.o: src/request_handler.cpp.o
@@ -417,6 +491,30 @@ src/request_handler.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/game_server.dir/build.make CMakeFiles/game_server.dir/src/request_handler.cpp.s
 .PHONY : src/request_handler.cpp.s
 
+tests/collision_detector_tests.o: tests/collision_detector_tests.cpp.o
+.PHONY : tests/collision_detector_tests.o
+
+# target to build an object file
+tests/collision_detector_tests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/collision_tests.dir/build.make CMakeFiles/collision_tests.dir/tests/collision_detector_tests.cpp.o
+.PHONY : tests/collision_detector_tests.cpp.o
+
+tests/collision_detector_tests.i: tests/collision_detector_tests.cpp.i
+.PHONY : tests/collision_detector_tests.i
+
+# target to preprocess a source file
+tests/collision_detector_tests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/collision_tests.dir/build.make CMakeFiles/collision_tests.dir/tests/collision_detector_tests.cpp.i
+.PHONY : tests/collision_detector_tests.cpp.i
+
+tests/collision_detector_tests.s: tests/collision_detector_tests.cpp.s
+.PHONY : tests/collision_detector_tests.s
+
+# target to generate assembly for a file
+tests/collision_detector_tests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/collision_tests.dir/build.make CMakeFiles/collision_tests.dir/tests/collision_detector_tests.cpp.s
+.PHONY : tests/collision_detector_tests.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -425,6 +523,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... GameLib"
+	@echo "... collision_tests"
 	@echo "... game_server"
 	@echo "... src/api_handler.o"
 	@echo "... src/api_handler.i"
@@ -432,6 +532,9 @@ help:
 	@echo "... src/boost_json.o"
 	@echo "... src/boost_json.i"
 	@echo "... src/boost_json.s"
+	@echo "... src/collision_detector.o"
+	@echo "... src/collision_detector.i"
+	@echo "... src/collision_detector.s"
 	@echo "... src/dog.o"
 	@echo "... src/dog.i"
 	@echo "... src/dog.s"
@@ -450,6 +553,9 @@ help:
 	@echo "... src/json_serializer.o"
 	@echo "... src/json_serializer.i"
 	@echo "... src/json_serializer.s"
+	@echo "... src/loot_generator.o"
+	@echo "... src/loot_generator.i"
+	@echo "... src/loot_generator.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
@@ -462,6 +568,9 @@ help:
 	@echo "... src/request_handler.o"
 	@echo "... src/request_handler.i"
 	@echo "... src/request_handler.s"
+	@echo "... tests/collision_detector_tests.o"
+	@echo "... tests/collision_detector_tests.i"
+	@echo "... tests/collision_detector_tests.s"
 .PHONY : help
 
 

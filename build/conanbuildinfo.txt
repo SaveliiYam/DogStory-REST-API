@@ -1,25 +1,28 @@
 [includedirs]
-/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc/include
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/include
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/include
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/include
+/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978/include
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/include
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/include
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/include
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/include
 
 [libdirs]
-/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc/lib
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/lib
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/lib
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/lib
+/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978/lib
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/lib
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/lib
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/lib
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/lib
 
 [bindirs]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/bin
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/bin
 
 [resdirs]
 
 
 [builddirs]
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/lib/cmake/Catch2
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/
 
 [libs]
 boost_contract
@@ -62,6 +65,8 @@ boost_filesystem
 boost_atomic
 boost_wserialization
 boost_serialization
+Catch2Main
+Catch2
 z
 bz2
 backtrace
@@ -70,6 +75,7 @@ backtrace
 dl
 rt
 pthread
+m
 
 [defines]
 BOOST_STACKTRACE_ADDR2LINE_LOCATION="/usr/bin/addr2line"
@@ -103,10 +109,10 @@ BOOST_STACKTRACE_USE_NOOP
 
 
 [includedirs_boost]
-/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc/include
+/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978/include
 
 [libdirs_boost]
-/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc/lib
+/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978/lib
 
 [bindirs_boost]
 
@@ -195,7 +201,7 @@ BOOST_STACKTRACE_USE_NOOP
 
 
 [rootpath_boost]
-/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc
+/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978
 
 [name_boost]
 boost
@@ -212,11 +218,78 @@ cmake_find_package=Boost
 cmake_find_package_multi=Boost
 
 
+[includedirs_catch2]
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/include
+
+[libdirs_catch2]
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/lib
+
+[bindirs_catch2]
+
+
+[resdirs_catch2]
+
+
+[builddirs_catch2]
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e/lib/cmake/Catch2
+
+[libs_catch2]
+Catch2Main
+Catch2
+
+[system_libs_catch2]
+m
+
+[defines_catch2]
+
+
+[cppflags_catch2]
+
+
+[cxxflags_catch2]
+
+
+[cflags_catch2]
+
+
+[sharedlinkflags_catch2]
+
+
+[exelinkflags_catch2]
+
+
+[sysroot_catch2]
+
+
+[frameworks_catch2]
+
+
+[frameworkdirs_catch2]
+
+
+[rootpath_catch2]
+/home/savelii/.conan/data/catch2/3.1.0/_/_/package/25c9ba754cb107c25053d39ff36e4eb0233c185e
+
+[name_catch2]
+catch2
+
+[version_catch2]
+3.1.0
+
+[generatornames_catch2]
+cmake_find_package=catch2
+cmake_find_package_multi=catch2
+
+[generatorfilenames_catch2]
+cmake_find_package=Catch2
+cmake_find_package_multi=Catch2
+
+
 [includedirs_zlib]
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/include
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/include
 
 [libdirs_zlib]
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/lib
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/lib
 
 [bindirs_zlib]
 
@@ -225,7 +298,7 @@ cmake_find_package_multi=Boost
 
 
 [builddirs_zlib]
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585/
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/
 
 [libs_zlib]
 z
@@ -261,7 +334,7 @@ z
 
 
 [rootpath_zlib]
-/home/savelii/.conan/data/zlib/1.2.13/_/_/package/be27726f9885116da1158027505be62e913cd585
+/home/savelii/.conan/data/zlib/1.2.13/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646
 
 [name_zlib]
 zlib
@@ -278,19 +351,19 @@ cmake_find_package_multi=ZLIB
 
 
 [includedirs_bzip2]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/include
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/include
 
 [libdirs_bzip2]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/lib
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/lib
 
 [bindirs_bzip2]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/bin
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/bin
 
 [resdirs_bzip2]
 
 
 [builddirs_bzip2]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/
 
 [libs_bzip2]
 bz2
@@ -326,7 +399,7 @@ bz2
 
 
 [rootpath_bzip2]
-/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515
+/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e
 
 [name_bzip2]
 bzip2
@@ -343,10 +416,10 @@ cmake_find_package_multi=BZip2
 
 
 [includedirs_libbacktrace]
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/include
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/include
 
 [libdirs_libbacktrace]
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/lib
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/lib
 
 [bindirs_libbacktrace]
 
@@ -355,7 +428,7 @@ cmake_find_package_multi=BZip2
 
 
 [builddirs_libbacktrace]
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585/
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646/
 
 [libs_libbacktrace]
 backtrace
@@ -391,7 +464,7 @@ backtrace
 
 
 [rootpath_libbacktrace]
-/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/be27726f9885116da1158027505be62e913cd585
+/home/savelii/.conan/data/libbacktrace/cci.20210118/_/_/package/dfbe50feef7f3c6223a476cd5aeadb687084a646
 
 [name_libbacktrace]
 libbacktrace
@@ -409,11 +482,13 @@ cci.20210118
 [USER_boost]
 stacktrace_addr2line_available=True
 [USER_bzip2]
+[USER_catch2]
 [USER_libbacktrace]
 [USER_zlib]
 [ENV_boost]
-BOOST_ROOT=/home/savelii/.conan/data/boost/1.78.0/_/_/package/8cc3305c27e5ff838d1c7590662e309638310dfc
+BOOST_ROOT=/home/savelii/.conan/data/boost/1.78.0/_/_/package/dc8aedd23a0f0a773a5fcdcfe1ae3e89c4205978
+[ENV_catch2]
 [ENV_zlib]
 [ENV_bzip2]
-PATH=["/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/76bd63d0cd275bc555bda09b7f93740254ba3515/bin"]
+PATH=["/home/savelii/.conan/data/bzip2/1.0.8/_/_/package/c32092bf4d4bb47cf962af898e02823f499b017e/bin"]
 [ENV_libbacktrace]

@@ -273,6 +273,30 @@
    "False"
   ],
   [
+   "catch2:console_width",
+   "80"
+  ],
+  [
+   "catch2:default_reporter",
+   "None"
+  ],
+  [
+   "catch2:fPIC",
+   "True"
+  ],
+  [
+   "catch2:no_posix_signals",
+   "False"
+  ],
+  [
+   "catch2:shared",
+   "False"
+  ],
+  [
+   "catch2:with_prefix",
+   "False"
+  ],
+  [
    "libbacktrace:fPIC",
    "True"
   ],

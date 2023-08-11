@@ -2,7 +2,6 @@
 #include <vector>
 #include <filesystem>
 #include "tagged.h"
-#include "game_session.h"
 #include <memory>
 #include <functional>
 
@@ -10,8 +9,9 @@ namespace model
 {
     class Player;
     class GameSession;
+    struct GameSessionsStates;
 }
-
+using RetiredSessionPlayers = std::pair<std::shared_ptr<model::GameSession>, std::vector<std::shared_ptr<model::Player>>>;
 namespace model
 {
 
@@ -60,16 +60,29 @@ namespace model
         Dimension dx, dy;
     };
 
+    struct LootInfo
+    {
+        LootInfo(unsigned _id, unsigned _type, double coordx, double coordy)
+            : id{_id}, type{_type}, x{coordx}, y{coordy}
+        {
+        }
+        LootInfo() {}
+        unsigned id{};
+        unsigned type{};
+        double x{};
+        double y{};
+    };
+
     class Road
     {
         struct HorizontalTag
         {
-            explicit HorizontalTag() = default;
+            HorizontalTag() = default;
         };
 
         struct VerticalTag
         {
-            explicit VerticalTag() = default;
+            VerticalTag() = default;
         };
 
     public:
@@ -157,6 +170,33 @@ namespace model
         Offset offset_;
     };
 
+    class Loot
+    {
+    public:
+        Loot(std::string name, std::string file, std::string type,
+             Coord rotation, std::string color, double scale, int score) noexcept
+            : name_{name}, file_{file}, type_{type}, rotation_{rotation}, color_{color}, scale_{scale}, score_{score}
+        {
+        }
+
+        const std::string &GetName() const noexcept { return name_; }
+        const std::string &GetFile() const noexcept { return file_; }
+        const std::string &GetType() const noexcept { return type_; }
+        Coord GetRotation() const noexcept { return rotation_; }
+        const std::string &GetColor() const noexcept { return color_; }
+        double GetScale() const noexcept { return scale_; }
+        int GetScore() const noexcept { return score_; }
+
+    private:
+        std::string name_;
+        std::string file_;
+        std::string type_;
+        Coord rotation_{-1};
+        std::string color_;
+        double scale_{};
+        int score_{};
+    };
+
     class Map
     {
     public:
@@ -164,7 +204,7 @@ namespace model
         using Roads = std::vector<Road>;
         using Buildings = std::vector<Building>;
         using Offices = std::vector<Office>;
-
+        using Loots = std::vector<Loot>;
         Map(Id id, std::string name) noexcept
             : id_(std::move(id)), name_(std::move(name))
         {
@@ -190,9 +230,19 @@ namespace model
             return roads_;
         }
 
+        const size_t GetNumRoads() const noexcept
+        {
+            return roads_.size();
+        }
+
         const Offices &GetOffices() const noexcept
         {
             return offices_;
+        }
+
+        const Loots &GetLoots() const noexcept
+        {
+            return loots_;
         }
 
         void AddRoad(const Road &road)
@@ -205,9 +255,13 @@ namespace model
             buildings_.emplace_back(building);
         }
 
-        void AddOffice(Office office);
+        void AddOffice(const Office &office);
+        void AddLoot(Loot loot);
+        size_t GetNumLoots() const noexcept { return loots_.size(); }
         void SetDogSpeed(double speed) { dog_speed_ = speed; }
         double GetDogSpeed() const { return dog_speed_; }
+        void SetBagCapacity(unsigned capacity) { bag_capacity_ = capacity; }
+        unsigned GetBagCapacity() const noexcept { return bag_capacity_; }
 
     private:
         using OfficeIdToIndex = std::unordered_map<Office::Id, size_t, util::TaggedHasher<Office::Id>>;
@@ -219,7 +273,46 @@ namespace model
 
         OfficeIdToIndex warehouse_id_to_index_;
         Offices offices_;
+        Loots loots_;
         double dog_speed_{0.0};
+        unsigned bag_capacity_{};
+    };
+
+    struct DogPosition
+    {
+        DogPosition(double newx, double newy) : x{newx}, y{newy} {}
+        double x{0.0};
+        double y{0.0};
+    };
+
+    struct DogSpeed
+    {
+        double vx{0.0};
+        double vy{0.0};
+    };
+
+    struct DogPos
+    {
+        size_t current_road_index{0};
+        DogPosition curr_position{0.0, 0.0};
+        DogSpeed curr_speed{0.0, 0.0};
+    };
+
+    enum class DogDirection
+    {
+        NORTH,
+        SOUTH,
+        WEST,
+        EAST,
+        STOP
+    };
+
+    struct PlayerRecordItem
+    {
+        std::string id;
+        std::string name;
+        int score;
+        int playTime;
     };
 
     class Game
@@ -227,16 +320,26 @@ namespace model
     public:
         using Maps = std::vector<Map>;
         using PlayerAuthInfo = std::pair<std::string, unsigned int>;
-        void AddMap(Map map);
+        void AddMap(const Map &map);
 
         void AddBasePath(const std::filesystem::path &base_path)
         {
             base_path_ = base_path;
         }
 
+        void AddSavePath(const std::filesystem::path &save_path)
+        {
+            save_path_ = save_path;
+        }
+
         const std::filesystem::path &GetBasePath()
         {
             return base_path_;
+        }
+
+        const std::filesystem::path &GetSavePath() const
+        {
+            return save_path_;
         }
 
         const Maps &GetMaps() const noexcept
@@ -254,21 +357,38 @@ namespace model
         }
 
         const std::vector<std::shared_ptr<Player>> FindAllPlayersForAuthInfo(const std::string &auth_token);
+        const std::vector<LootInfo> GetLootsForAuthInfo(const std::string &auth_token);
         std::shared_ptr<Player> GetPlayerWithAuthToken(const std::string &auth_token);
         bool HasSessionWithAuthInfo(const std::string &auth_token);
         std::shared_ptr<GameSession> GetSessionWithAuthInfo(const std::string &auth_token);
         Game::PlayerAuthInfo AddPlayer(const std::string &map_id, const std::string &player_name);
         void SetDefaultDogSpeed(double speed) { default_dog_speed_ = speed; }
         double GetDefaultDogSpeed() { return default_dog_speed_; }
+        void SetDogRetirementTime(double ret_time) { dog_retierement_time_ = ret_time * 1000; }
         void MoveDogs(int deltaTime);
+        void GenerateLoot(int deltaTime);
         void SetTickPeriod(int period) { tick_period_ = period; }
-        void SetSpawnInRandomPoint(bool random_spawn) { spawn_in_random_points_ = random_spawn; }
         int GetTickPeriod() { return tick_period_; }
+        void SetSpawnInRandomPoint(bool random_spawn) { spawn_in_random_points_ = random_spawn; }
+        void SetSavePeriod(int period) { save_period_ = period; }
+        int GetSavePeriod() { return save_period_; }
         bool GetSpawnInRandomPoint() { return spawn_in_random_points_; }
         size_t GetNumPlayersInAllSessions();
+        void SetLootParameters(double period, double probability);
+        std::pair<double, double> GetLootParameters() { return {loot_period_, loot_probability_}; }
+        void SetDefaultBagCapacity(unsigned capacity) { default_bag_capacity_ = capacity; }
+        std::shared_ptr<GameSessionsStates> GetGameSessionsStates() const;
+        void SaveSessions(int deltaTime);
+        void RestoreSessions(const model::GameSessionsStates &sessions);
+        std::vector<PlayerRecordItem> GetRecords(int start, int max_items) const;
+        void HandleRetiredPlayers();
 
     private:
         std::shared_ptr<GameSession> FindSession(const std::string &map_name);
+        std::shared_ptr<GameSession> GetSessionForToken(const std::string &auth_token);
+        std::vector<RetiredSessionPlayers> FindExpiredPlayers();
+        void SaveExpiredPlayers(const std::vector<RetiredSessionPlayers> &expired_sessions_players);
+        void DeleteExpiredPlayers(const std::vector<RetiredSessionPlayers> &expired_sessions_players);
 
     private:
         using MapIdHasher = util::TaggedHasher<Map::Id>;
@@ -277,10 +397,16 @@ namespace model
         std::vector<Map> maps_;
         MapIdToIndex map_id_to_index_;
         std::filesystem::path base_path_;
+        std::filesystem::path save_path_;
         std::vector<std::shared_ptr<GameSession>> sessions_;
         double default_dog_speed_{0.0};
+        double dog_retierement_time_{60.0 * 1000};
         int tick_period_{-1};
+        int save_period_{0};
         bool spawn_in_random_points_{false};
+        double loot_period_{};
+        double loot_probability_{};
+        unsigned default_bag_capacity_{};
     };
 }
 // namespace model
