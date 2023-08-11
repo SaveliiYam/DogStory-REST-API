@@ -1,6 +1,4 @@
 #include "request_handler.h"
-// #include <boost/beast.hpp>
-// #include <set>
 
 namespace beast = boost::beast;
 namespace http = beast::http;

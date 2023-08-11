@@ -1,35 +1,21 @@
 #include "dog.h"
 #include <map>
-#include <exception>
 #include "server_exceptions.h"
-#include <cmath>
-#include <random>
+#include "utils.h"
+#include "collision_detector.h"
 
-namespace
-{
-	int GetRandowNumber(int minValue, int maxValue)
-	{
-		std::mt19937 engine;
-		std::random_device device;
-		engine.seed(device());
-
-		std::uniform_int_distribution<int> distribution(minValue, maxValue);
-
-		return distribution(engine);
-	}
-
-}
-
+constexpr double dS = 0.4;
+constexpr int millisescondsInSecond = 1000;
+constexpr double gathererWidth = 0.6;
+constexpr double epsilon = 0.0001;
 namespace model
 {
-	constexpr double dS = 0.4;
-	constexpr int millisescondsInSecond = 1000;
-	std::string ConvertDogDirectionToString(model::DogDirection direction)
+	std::string ConvertDogDirectionToString(DogDirection direction)
 	{
-		std::map<model::DogDirection, std::string> dir{{model::DogDirection::EAST, "R"},
-													   {model::DogDirection::WEST, "L"},
-													   {model::DogDirection::SOUTH, "D"},
-													   {model::DogDirection::NORTH, "U"}};
+		std::map<DogDirection, std::string> dir{{DogDirection::EAST, "R"},
+												{DogDirection::WEST, "L"},
+												{DogDirection::SOUTH, "D"},
+												{DogDirection::NORTH, "U"}};
 
 		if (auto itFind = dir.find(direction); itFind != dir.end())
 			return itFind->second;
@@ -37,28 +23,72 @@ namespace model
 		return "U";
 	}
 
-	Dog::Dog(const model::Map *map, bool spawn_dog_in_random_point) : map_(map)
+	Dog::Dog(const model::Map *map, bool spawn_dog_in_random_point, unsigned defaultBagCapacity) : map_(map)
 	{
+		bag_capacity_ = map->GetBagCapacity() ? map->GetBagCapacity() : defaultBagCapacity;
 		direction_ = DogDirection::NORTH;
 		navigator_ = std::make_shared<DogNavigator>(map_->GetRoads(), spawn_dog_in_random_point);
 	}
 
-	void Dog::SetSpeed(model::DogDirection dir, double speed)
+	void Dog::SetSpeed(DogDirection dir, double speed)
 	{
-		std::map<model::DogDirection, DogSpeed> velMap{{DogDirection::EAST, {speed, 0}}, {DogDirection::WEST, {-speed, 0}}, {DogDirection::SOUTH, {0, speed}}, {DogDirection::NORTH, {0, -speed}}, {DogDirection::STOP, {0, 0}}};
+		std::map<DogDirection, DogSpeed> velMap{{DogDirection::EAST, {speed, 0.0}}, {DogDirection::WEST, {-speed, 0.0}}, {DogDirection::SOUTH, {0.0, speed}}, {DogDirection::NORTH, {0.0, -speed}}, {DogDirection::STOP, {0.0, 0.0}}};
 
-		auto findVel = velMap.find(dir);
-		if (findVel == velMap.end())
+		auto find_vel = velMap.find(dir);
+		if (find_vel == velMap.end())
 			throw DogSpeedException();
 
-		direction_ = dir;
-		speed_ = findVel->second;
-		navigator_->SetDogSpeed(speed_);
+		if (dir != DogDirection::STOP)
+			direction_ = dir;
+		idle_time_ = 0;
+		navigator_->SetDogSpeed(find_vel->second);
 	}
 
-	void Dog::Move(int deltaTime)
+	std::optional<collision_detector::Gatherer> Dog::Move(int deltaTime)
 	{
-		navigator_->MoveDog(direction_, speed_, deltaTime);
+		std::optional<collision_detector::Gatherer> res;
+		play_time_ += deltaTime;
+		auto speed = navigator_->GetDogSpeed();
+		if ((std::abs(speed.vx) <= epsilon) && (std::abs(speed.vy) <= epsilon))
+		{
+			idle_time_ += deltaTime;
+			return res;
+		}
+		else
+			idle_time_ = 0;
+
+		DogPosition start = GetPosition();
+		navigator_->MoveDog(direction_, deltaTime);
+
+		DogPosition end = GetPosition();
+
+		if ((std::abs(start.x - end.x) > epsilon) || (std::abs(start.y - end.y) > epsilon))
+		{
+			collision_detector::Gatherer gth({start.x, start.y}, {end.x, end.y}, gathererWidth);
+			res = gth;
+		}
+
+		return res;
+	}
+
+	bool Dog::AddLoot(const model::LootInfo &loot)
+	{
+		if (gathered_loots_.size() >= bag_capacity_)
+			return false;
+
+		gathered_loots_.push_back(loot);
+		return true;
+	}
+
+	void Dog::PassLootToOffice()
+	{
+		const auto &loots = map_->GetLoots();
+
+		for (const auto &loot : gathered_loots_)
+		{
+			score_ += loots[loot.type].GetScore();
+		}
+		gathered_loots_.clear();
 	}
 
 	bool DogNavigator::RoadsCrossed(const model::Road &road1, const model::Road &road2)
@@ -135,7 +165,7 @@ namespace model
 
 	void DogNavigator::SetStartPositionRandomRoad()
 	{
-		dog_info_.current_road_index = GetRandowNumber(0, roads_.size() - 1);
+		dog_info_.current_road_index = utils::GetRandomNumber<size_t>(0, roads_.size() - 1);
 		auto start = roads_[dog_info_.current_road_index].GetStart();
 		auto end = roads_[dog_info_.current_road_index].GetEnd();
 
@@ -143,13 +173,13 @@ namespace model
 		{
 			if (start.x > end.x)
 				std::swap(start, end);
-			dog_info_.curr_position = DogPosition(GetRandowNumber(start.x, end.x), start.y);
+			dog_info_.curr_position = DogPosition(utils::GetRandomNumber<int>(start.x, end.x), start.y);
 		}
 		else
 		{
 			if (start.y > end.y)
 				std::swap(start, end);
-			dog_info_.curr_position = DogPosition(start.x, GetRandowNumber(start.y, end.y));
+			dog_info_.curr_position = DogPosition(start.x, utils::GetRandomNumber<int>(start.y, end.y));
 		}
 	}
 
@@ -161,8 +191,8 @@ namespace model
 		if (start.x > end.x)
 			std::swap(start, end);
 
-		double minXLeft = (double)start.x - dS;
-		double maxXRight = (double)end.x + dS;
+		double minXLeft = static_cast<double>(start.x) - dS;
+		double maxXRight = static_cast<double>(end.x) + dS;
 
 		if (newPos.x < minXLeft)
 		{
@@ -184,17 +214,17 @@ namespace model
 
 		if (start.y > end.y)
 			std::swap(start, end);
-		double minYDown = (double)start.y - dS;
-		double maxYUp = (double)end.y + dS;
+		double minyDown = static_cast<double>(start.y) - dS;
+		double maxyUp = static_cast<double>(end.y) + dS;
 
-		if (newPos.y < minYDown)
+		if (newPos.y < minyDown)
 		{
-			newPos.y = minYDown;
+			newPos.y = minyDown;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
-		else if (newPos.y > maxYUp)
+		else if (newPos.y > maxyUp)
 		{
-			newPos.y = maxYUp;
+			newPos.y = maxyUp;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
 		dog_info_.curr_position = newPos;
@@ -210,15 +240,15 @@ namespace model
 			if (road_info.road_type != RoadType::Crossed)
 				continue;
 
-			const auto &adj_road = roads_[road_info.road_index]; // dog_info_.current_road_index];
+			const auto &adj_road = roads_[road_info.road_index];
 
-			if ((newPos.y < (double)adj_road.GetStart().y) && (newPos.y < (double)adj_road.GetEnd().y))
+			if ((newPos.y < static_cast<double>(adj_road.GetStart().y)) && (newPos.y < static_cast<double>(adj_road.GetEnd().y)))
 				continue;
 
-			if ((newPos.y > (double)adj_road.GetStart().y) && (newPos.y > (double)adj_road.GetEnd().y))
+			if ((newPos.y > static_cast<double>(adj_road.GetStart().y)) && (newPos.y > static_cast<double>(adj_road.GetEnd().y)))
 				continue;
 
-			double dist = std::abs((double)adj_road.GetStart().x - newPos.x);
+			double dist = std::abs(static_cast<double>(adj_road.GetStart().x) - newPos.x);
 
 			if (dist <= dS)
 			{
@@ -244,8 +274,8 @@ namespace model
 			if (!adj_road.IsVertical())
 				continue;
 
-			double dist1 = std::abs((double)adj_road.GetStart().x - edge_point.x);
-			double dist2 = std::abs((double)adj_road.GetEnd().x - edge_point.x);
+			double dist1 = std::abs(static_cast<double>(adj_road.GetStart().x) - edge_point.x);
+			double dist2 = std::abs(static_cast<double>(adj_road.GetEnd().x) - edge_point.x);
 
 			if ((dist1 <= dS) || (dist2 <= dS))
 			{
@@ -257,7 +287,8 @@ namespace model
 		return res;
 	}
 
-	void DogNavigator::FindNewPosPerpendicularHorizontal(const model::Road &road, DogDirection direction, DogPosition &newPos)
+	void DogNavigator::FindNewPosPerpendicularHorizontal(const model::Road &road, DogDirection direction,
+														 DogPosition &newPos)
 	{
 		std::optional<size_t> adjRoad = FindNearestAdjacentVerticalRoad(newPos);
 		bool findRoad = false;
@@ -291,12 +322,12 @@ namespace model
 			return;
 		}
 
-		if (std::abs(newPos.y - (double)road.GetStart().y) >= dS)
+		if (std::abs(newPos.y - static_cast<double>(road.GetStart().y)) >= dS)
 		{
 			if (direction == DogDirection::NORTH)
-				newPos.y = (double)road.GetStart().y - dS;
+				newPos.y = static_cast<double>(road.GetStart().y) - dS;
 			else
-				newPos.y = (double)road.GetStart().y + dS;
+				newPos.y = static_cast<double>(road.GetStart().y) + dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
 
@@ -317,8 +348,8 @@ namespace model
 			if (!adj_road.IsHorizontal())
 				continue;
 
-			double dist1 = std::abs((double)adj_road.GetStart().y - edge_point.y);
-			double dist2 = std::abs((double)adj_road.GetEnd().y - edge_point.y);
+			double dist1 = std::abs(static_cast<double>(adj_road.GetStart().y) - edge_point.y);
+			double dist2 = std::abs(static_cast<double>(adj_road.GetEnd().y) - edge_point.y);
 
 			if ((dist1 <= dS) || (dist2 <= dS))
 			{
@@ -342,18 +373,17 @@ namespace model
 
 			const auto &adj_road = roads_[road_info.road_index];
 
-			if ((newPos.x < (double)adj_road.GetStart().x) && (newPos.x < (double)adj_road.GetEnd().x))
+			if ((newPos.x < static_cast<double>(adj_road.GetStart().x)) && (newPos.x < static_cast<double>(adj_road.GetEnd().x)))
 				continue;
 
-			if ((newPos.x > (double)adj_road.GetStart().x) && (newPos.x > (double)adj_road.GetEnd().x))
+			if ((newPos.x > static_cast<double>(adj_road.GetStart().x)) && (newPos.x > static_cast<double>(adj_road.GetEnd().x)))
 				continue;
 
-			double dist = std::abs((double)adj_road.GetStart().y - newPos.y);
+			double dist = std::abs(static_cast<double>(adj_road.GetStart().y) - newPos.y);
 
 			if (dist <= dS)
 			{
-				res = road_info.road_index;
-				return res;
+				return road_info.road_index;
 			}
 		}
 
@@ -392,25 +422,25 @@ namespace model
 			return;
 		}
 
-		if (std::abs(newPos.x - (double)road.GetStart().x) > dS)
+		if (std::abs(newPos.x - static_cast<double>(road.GetStart().x)) > dS)
 		{
 			if (direction == DogDirection::WEST)
-				newPos.x = (double)road.GetStart().x - dS;
+				newPos.x = static_cast<double>(road.GetStart().x) - dS;
 			else
-				newPos.x = (double)road.GetStart().x + dS;
+				newPos.x = static_cast<double>(road.GetStart().x) + dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
 
 		dog_info_.curr_position = newPos;
 	}
 
-	void DogNavigator::MoveDog(DogDirection direction, DogSpeed speed, int time)
+	void DogNavigator::MoveDog(DogDirection direction, int time)
 	{
-		dog_info_.curr_speed = speed;
 		const auto &road = roads_[dog_info_.current_road_index];
-		double dt = (double)time / millisescondsInSecond;
+		double dt = static_cast<double>(time) / millisescondsInSecond;
 
-		DogPosition newPos{dog_info_.curr_position.x + dt * speed.vx, dog_info_.curr_position.y + dt * speed.vy};
+		DogPosition newPos{dog_info_.curr_position.x + dt * dog_info_.curr_speed.vx,
+						   dog_info_.curr_position.y + dt * dog_info_.curr_speed.vy};
 
 		if (road.IsHorizontal())
 		{
@@ -441,24 +471,24 @@ namespace model
 		auto [x_min, x_max] = std::minmax({road.GetStart().x, road.GetEnd().x});
 		auto [y_min, y_max] = std::minmax({road.GetStart().y, road.GetEnd().y});
 
-		if (dog_info_.curr_position.x < ((double)x_min - dS))
+		if (dog_info_.curr_position.x < (static_cast<double>(x_min) - dS))
 		{
-			dog_info_.curr_position.x = (double)x_min - dS;
+			dog_info_.curr_position.x = static_cast<double>(x_min) - dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
-		if (dog_info_.curr_position.x > ((double)x_max + dS))
+		if (dog_info_.curr_position.x > (static_cast<double>(x_max) + dS))
 		{
-			dog_info_.curr_position.x = (double)x_max + dS;
+			dog_info_.curr_position.x = static_cast<double>(x_max) + dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
-		if (dog_info_.curr_position.y < ((double)y_min - dS))
+		if (dog_info_.curr_position.y < (static_cast<double>(y_min) - dS))
 		{
-			dog_info_.curr_position.y = (double)y_min - dS;
+			dog_info_.curr_position.y = static_cast<double>(y_min) - dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
-		if (dog_info_.curr_position.y > ((double)y_max + dS))
+		if (dog_info_.curr_position.y > (static_cast<double>(y_max) + dS))
 		{
-			dog_info_.curr_position.y = (double)y_max + dS;
+			dog_info_.curr_position.y = static_cast<double>(y_max) + dS;
 			dog_info_.curr_speed = {0.0, 0.0};
 		}
 	}

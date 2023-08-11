@@ -3,7 +3,7 @@
 #include <boost/system.hpp>
 
 namespace sys = boost::system;
-namespace net = boost::asio; 
+namespace net = boost::asio;
 using namespace std::literals;
 
 namespace event_logger
@@ -14,7 +14,7 @@ namespace event_logger
         constexpr static std::string_view READ = "read"sv;
         constexpr static std::string_view WRITE = "write"sv;
         constexpr static std::string_view ACCEPT = "accept"sv;
-    }; 
+    };
 
     void InitLogger();
     void LogStartServer(const std::string &address, unsigned int port, const std::string &message);

@@ -108,7 +108,7 @@ namespace event_logger
 
     resp_object["data"] = data_object;
 
-    BOOST_LOG_TRIVIAL(info) << logging::add_value(additional_data, resp_object);
+    BOOST_LOG_TRIVIAL(trace) << logging::add_value(additional_data, resp_object);
   }
 
   void LogServerError(const sys::error_code ec, std::string_view where)
@@ -124,7 +124,7 @@ namespace event_logger
 
     error_object["data"] = data_object;
 
-    BOOST_LOG_TRIVIAL(info) << logging::add_value(additional_data, error_object);
+    BOOST_LOG_TRIVIAL(warning) << logging::add_value(additional_data, error_object);
   }
 
 } // namespace event_logger

@@ -3,7 +3,6 @@
 #include "model.h"
 #include "event_logger.h"
 #include "api_handler.h"
-
 namespace net = boost::asio;
 
 const std::string_view apiPrefix = "/api/";
@@ -36,23 +35,23 @@ namespace http_handler
 		void operator()(http::request<Body, http::basic_fields<Allocator>> &&req, Send &&send)
 		{
 			std::string request = {req.target().begin(), req.target().end()};
+
 			if (api_handler_->IsApiRequest(request))
 			{
 				return net::dispatch(strand_, [self = shared_from_this(), request, send, req]
 									 {
-//    			    			std::string request = {req.target().begin(), req.target().end()};
-
     			    	       // Этот assert не выстрелит, так как лямбда-функция будет выполняться внутри strand
     			    		   assert(self->strand_.running_in_this_thread());
     			    	       auto resp = self->api_handler_->HandleApiRequest(request, req.method(), req[http::field::authorization], req.body(), req.version(),req.keep_alive());
     			    	       send(std::move(resp)); });
 			}
 
-			if (req.method() != http::verb::get)
+			if ((req.method() != http::verb::get) && (req.method() != http::verb::head))
 			{
 				auto resp = MakeStringResponse(http::status::method_not_allowed,
 											   json_serializer::MakeMappedResponce({{"code", "invalidMethod"}, {"message", "Invalid method"}}),
-											   req.version(), req.keep_alive(), ContentType::APPLICATION_JSON);
+											   req.version(), req.keep_alive(), ContentType::APPLICATION_JSON,
+											   {{http::field::cache_control, "no-cache"sv}, {http::field::allow, HeaderType::ALLOW_HEADERS}});
 
 				send(std::move(resp));
 				return;
@@ -83,7 +82,10 @@ namespace http_handler
 					const auto &responce = json_serializer::GetMapContentResponce(game_, {target.begin(), target.end()});
 					if (!responce.empty())
 					{
-						resp = MakeStringResponse(http::status::ok, responce, req.version(), req.keep_alive(), ContentType::APPLICATION_JSON, {{http::field::cache_control, "no-cache"sv}});
+						if (req.method() == http::verb::get)
+							resp = MakeStringResponse(http::status::ok, responce, req.version(), req.keep_alive(), ContentType::APPLICATION_JSON, {{http::field::cache_control, "no-cache"sv}});
+						else
+							resp = MakeStringResponse(http::status::ok, "", req.version(), req.keep_alive(), ContentType::APPLICATION_JSON, {{http::field::cache_control, "no-cache"sv}});
 					}
 					else
 					{
